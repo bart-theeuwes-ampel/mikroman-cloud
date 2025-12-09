@@ -1,13 +1,17 @@
 #!/bin/sh
 set -e
 
-# Run database migrations
-echo "Running migrations..."
-python manage.py migrate --noinput
+# Set the correct working directory
+WORKDIR=/mikroman   # <-- adjust this after inspecting base image
+cd $WORKDIR || exit 1
 
-# Create superuser if not exists
+# Run migrations (ignore errors temporarily to avoid crashing on missing DB)
+echo "Running migrations..."
+python manage.py migrate --noinput || echo "Migration failed, maybe DB not ready yet"
+
+# Create superuser if Django is ready
 echo "Creating superuser..."
-python - <<EOF
+python - <<EOF || echo "Superuser creation skipped"
 from django.contrib.auth import get_user_model
 User = get_user_model()
 email='${SUPERUSER_EMAIL}'

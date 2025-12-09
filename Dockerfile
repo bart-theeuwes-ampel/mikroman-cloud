@@ -1,6 +1,8 @@
 # Use official Mikroman image as base
 FROM mikrowizard/mikroman:latest
 
+WORKDIR /mikroman
+
 # Set environment variables (optional defaults)
 ENV PORT=8181
 ENV SUPERUSER_EMAIL=admin@example.com
